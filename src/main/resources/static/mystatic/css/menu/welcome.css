@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+	div.welcome {
+		position:relative;
+		height:40px;
+		background-image:url("../img/welcome_background.png");
+	}

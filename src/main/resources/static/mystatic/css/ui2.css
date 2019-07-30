@@ -1,0 +1,24 @@
+.ui-intro-card li:nth-child(3) span a {
+	color: #f44642;
+}
+
+.admin-new-box {
+  padding-top: 70px;
+}
+
+.admin-fixed-title {
+  padding: 15px 10px;
+}
+
+.admin-fixed-title-content {
+  height: 45px;
+  padding: 0 20px;
+}
+
+.admin-fixed-title h2 {
+  line-height: 45px;
+}
+
+.admin-fixed-title .time {
+  line-height: 45px;
+}

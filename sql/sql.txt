@@ -1,0 +1,38 @@
+create table `error_type` (
+`id` integer(11) unsigned not null auto_increment,
+`error_type` varchar(128) default null comment '故障类型',
+PRIMARY KEY(`id`)
+) engine=InnoDB auto_increment=1 charset=UTF8;
+
+
+create table `white_list` (
+`id` int(11) unsigned not null auto_increment,
+`test_case_name` varchar(128) default null,
+PRIMARY KEY(`id`)
+) engine=InnoDB auto_increment=1 default charset=UTF8;
+
+create table `test_result` (
+`id` int(11) unsigned not null auto_increment,
+`department_name` varchar(128) default null,
+`test_case_name` varchar(128) default null ,
+`test_result` varchar(128) default null ,
+`assert_info` varchar(128) default null ,
+`testplan_time` datetime default null,
+`error_type` varchar(128) default null ,
+`error_comments` varchar(128) default null ,
+`testresult_time` datetime default null,
+PRIMARY KEY(`id`)
+) engine=InnoDB auto_increment=1 default charset=UTF8;
+
+
+create table `test_case` (
+`id` int(11) unsigned not null auto_increment,
+`department_name` varchar(128) default null,
+`test_case_name` varchar(128) default null ,
+`test_result` varchar(128) default null ,
+`last_test_result` varchar(128) default null ,
+`last_result_time` datetime default null,
+`assert_info` longtext default null ,
+`white_list_flag` TINYINT(4) default null,
+PRIMARY KEY(`id`)
+) engine=InnoDB auto_increment=1 default charset=UTF8;

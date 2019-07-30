@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>alertmonitorsystem</title>
+	<link rel="stylesheet" th:href="@{/mystatic/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/css/admin.css}">
+
+	<link rel="stylesheet" th:href="@{/mystatic/css/menu/index.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/css/menu/menu.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/css/menu/tab-control.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/css/menu/workspace.css}">
+	<link rel="stylesheet" th:href="@{/mystatic/css/menu/welcome.css}">
+</head>
+
+<body class="admin-body toggle-nav">
+	<div class="container-fluid">
+		<div class="row">
+			<!-- 左侧菜单栏 -->
+			<div id="sidebarHandler" class="sidebar">
+				<h1 class="sidebar-title">ams报警监控</h1>
+				<ul id="navHandler" class="nav nav-sidebar">
+					<li>
+						<a href="#" onclick='TabControlAppend(0,"首页","/alertmonitorsystem/welcome",true)'>
+							<i class="icon icon-home"></i>
+							<span>首页</span>
+						</a>
+					</li>
+						<li>
+							<a href="javascript:void(0);">
+								<i class="icon icon-chart"></i>
+								<span>白名单管理</span>
+							</a>
+							<ul>
+								<li>
+									<a href="#" onclick='TabControlAppend(1,"白名单模块管理","/alertmonitorsystem/white_list/list")'>信息管理</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:void(0);">
+								<i class="icon icon-chart"></i>
+								<span>测试结果管理</span>
+							</a>
+							<ul>
+								<li>
+									<a href="#" onclick='TabControlAppend(2,"测试结果模块管理","/alertmonitorsystem/test_result/list")'>信息管理</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:void(0);">
+								<i class="icon icon-chart"></i>
+								<span>测试用例管理</span>
+							</a>
+							<ul>
+								<li>
+									<a href="#" onclick='TabControlAppend(3,"测试用例模块管理","/alertmonitorsystem/test_case/list")'>信息管理</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="javascript:void(0);">
+								<i class="icon icon-chart"></i>
+								<span>错误类型管理</span>
+							</a>
+							<ul>
+								<li>
+									<a href="#" onclick='TabControlAppend(4,"错误类型模块管理","/alertmonitorsystem/error_type/list")'>信息管理</a>
+								</li>
+							</ul>
+						</li>
+				</ul>
+			</div>
+			<div class="main">
+				<!-- 页眉 -->
+				<nav class="navbar navbar-inverse">
+					<div class="container-fluid">
+						<div class="navbar-collapse pull-left">
+							<ul class="nav navbar-nav">
+								<li>
+									<a href="/alertmonitorsystem/home">
+										<i class="icon icon-back"></i>返回首页</a>
+								</li>
+							</ul>
+						</div>
+						<div class="dropdown">
+							<button type="button" id="dropdownMenuMemberController" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+							 aria-expanded="true">系统管理员
+								<i class="icon icon-arr-down"></i>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuMemberController">
+								<li>当前账户：管理员</li>
+								<li>项目名称：alertmonitorsystem</li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+				<div class="container-fluid" style="padding-left:0;padding-right:0;">
+					<!---tabs内容切换---->
+					<div id="frameContainer" class="frame-container" style="padding:0;height:100%;">
+						<!-- 选项卡 -->
+						<div class="tab-control">
+							<!-- 标签 -->
+							<div class="tab simple" style="background-image:url('mystatic/img/menu/background.png')">
+								<form>
+									<input class="prev" type="button" />
+									<input class="next" type="button" />
+									<input class="find" type="button" />
+								</form>
+								<ul>
+									<!-- <li>标签<a href="javascript:;">关闭</a></li> -->
+								</ul>
+							</div>
+							<!-- 标签查找 -->
+							<div class="tab-find hidden">
+								<form>
+									<input class="text" type="text" />
+								</form>
+								<ul>
+									<!-- <li>标签<a href="javascript:;">关闭</a></li> -->
+								</ul>
+							</div>
+							<!-- 主体 -->
+							<div class="mainContent">
+								<!-- <iframe scrolling="auto" frameborder="0" src='admin.html'></iframe>  -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/mystatic/jquery/jquery.min.js}"></script>
+	<script th:src="@{/mystatic/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/mystatic/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+	<script th:src="@{/mystatic/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+	<script th:src="@{/mystatic/js/admin.js}"></script>
+	<script th:src="@{/mystatic/js/menu/tab-control.js}"></script>
+	<script type="text/javascript" th:src="@{/mystatic/js/menu/tab-control.js}"></script>
+	<script type="text/javascript">
+		//添加标签页--默认引入页
+		TabControlAppend('-1', '首页', "/alertmonitorsystem/welcome");
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+	div.menu {
+		position:relative;
+		height:80px;
+		background-image:url("../img/menu_background.png");
+	}

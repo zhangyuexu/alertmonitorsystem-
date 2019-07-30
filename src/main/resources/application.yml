@@ -1,0 +1,57 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /alertmonitorsystem
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/ams?connectTimeout=10000&socketTimeout=10000&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+    #com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  resources:
+    static-locations: classpath:/static,classpath:/static/mystatic,classpath:/public,classpath:/resources,classpath:/META-INF/resources,classpath:/templates
+  devtools:
+    restart:
+      enabled: true
+      trigger-file: trigger.txt
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+  banner:
+    location: banner.txt
+
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3000
+    cache-null-values: true
+    pool:
+      max-idle: 200
+      min-idle: 200
+      max-active: 2000
+      max-wait: 1000
+
+#springboot全局配置返回字符串
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+mybatis:
+#  mapper-locations: classpath:sqlmapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jobs:
+  fixedDelay: 2000

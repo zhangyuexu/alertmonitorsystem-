@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>alertmonitorsystem</title>
+<link rel="stylesheet" th:href="@{/mystatic/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/mystatic/bootstrap/css/bootstrap-table.css}">
+<link rel="stylesheet" th:href="@{/mystatic/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}">
+<link rel="stylesheet" th:href="@{/mystatic/multiselect/css/bootstrap-multiselect.css}">
+<link rel="stylesheet" th:href="@{/mystatic/css/admin.css}">
+<link rel="stylesheet" th:href="@{/mystatic/css/ui.css}">
+<link rel="stylesheet" th:href="@{/mystatic/css/ui2.css}">
+<link rel="stylesheet" th:href="@{/mystatic/progressbar/css/mprogress.css}">
+<link rel="stylesheet" th:href="@{/mystatic/progressbar/css/style.css}">
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script th:src="@{/mystatic/html5shiv/html5shiv.min.js}"></script>
+    <script th:src="@{/mystatic/respond/respond.min.js}"></script>
+  <![endif]-->
+
+	<script th:src="@{/mystatic/jquery/jquery.min.js}"></script>
+	<script th:src="@{/mystatic/js/pageMe.js}"></script>
+	<script th:src="@{/mystatic/bootstrap/js/bootstrap.min.js}"></script>
+	<script th:src="@{/mystatic/bootstrap/js/bootstrap-table.js}"></script>
+	<script th:src="@{/mystatic/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+	<script th:src="@{/mystatic/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+	<script th:src="@{/mystatic/multiselect/js/bootstrap-multiselect.js}"></script>
+	<script th:src="@{/mystatic/js/admin.js}"></script>
+	<script th:src="@{/mystatic/js/ajaxFactory.js}"></script>
+	<script th:src="@{/mystatic/js/crudFactory.js}"></script>
+	<script th:src="@{/mystatic/echarts/echarts.min.js}"></script>
+	<!-- 进度条  -->
+	<script th:src="@{/mystatic/progressbar/js/mprogress.js}"></script>
+	<script th:src="@{/mystatic/progressbar/js/init-mprogress.js}"></script>
+	<script th:src="@{/mystatic/js/mustache/mustache.min.js}"></script>
+
+<style>
+/* 外面盒子样式---自己定义 */
+.page_div {
+	margin: 20px 10px 20px 0;
+	color: #666
+}
+/* 页数按钮样式 */
+.page_div button {
+	display: inline-block;
+	min-width: 30px;
+	height: 28px;
+	cursor: pointer;
+	color: #666;
+	font-size: 13px;
+	line-height: 28px;
+	background-color: #f9f9f9;
+	border: 1px solid #dce0e0;
+	text-align: center;
+	margin: 0 4px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+#firstPage, #lastPage, #nextPage, #prePage {
+	width: 50px;
+	color: #0073A9;
+	border: 1px solid #0073A9
+}
+
+#nextPage, #prePage {
+	width: 70px
+}
+
+.page_div .current {
+	background-color: #0073A9;
+	border-color: #0073A9;
+	color: #FFF
+}
+/* 页面数量 */
+.totalPages {
+	margin: 0 10px
+}
+
+.totalPages span, .totalSize span {
+	color: #0073A9;
+	margin: 0 5px
+}
+/*button禁用*/
+.page_div button:disabled {
+	opacity: .5;
+	cursor: no-drop
+}
+</style>
+</head>
+
+<body class="admin-body toggle-nav fs">
+
+	<div class="container-fluid">
+		<div class="row" style="padding-left: 0">
+			<div class="main" style="padding-top: 0">
+				<div class="container-fluid">
+					<div class="admin-new-box ui-admin-content">
+						<!--后台正文区域-->
+						<div class="ui-panel">
+							<div class="ui-title-bar">
+								<div class="ui-title">测试用例管理模块</div>
+							</div>
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="uiTab01">
+									<!-- 查询区域 -->
+									<div>
+												<input type="number" id="id-query" placeholder="id" style="margin-top: 10px"/>&emsp;
+												<input type="text" id="department_name-query" placeholder="department_name" style="margin-top: 10px"/>&emsp;
+												<input type="text" id="test_case_name-query" placeholder="test_case_name" style="margin-top: 10px"/>&emsp;
+												<input type="text" id="last_result_time-query" class="form_datetime" placeholder="last_result_time" style="margin-top: 10px"/>
+												<input type="number" id="white_list_flag-query" placeholder="white_list_flag" style="margin-top: 10px"/>&emsp;
+										<button type="button" class="btn btn-primary btn-sm" onclick="queryInfo()">查询</button>&nbsp;
+										<button type="button" class="btn btn-primary btn-sm" onclick="exportExcel()">导出excel</button>
+									</div>
+									<!-- 查询区域 end-->
+									<!-- 添加数据区域 -->
+									<div style="text-align: right;">
+										<button type="button" class="btn btn-success btn-sm" onclick="addMsg()" style="margin: 8px">添加数据</button>
+									</div>
+									<!-- 查询结果表格显示区域 -->
+									<div class="table-responsive" style="overflow: scroll;">
+										<table id="newsContent" class="table text-nowrap">
+											<tr>
+														<th>操作</th>
+														<th>id<a href='#' onclick='$crud.setAscColumn(this,"id")'>↑</a>&nbsp;<a href='#' onclick='$crud.setDescColumn(this,"id")'>↓</a></th>
+														<th>department_name</th>
+														<th>test_case_name</th>
+														<th>test_result</th>
+														<th>last_test_result</th>
+														<th>last_result_time</th>
+														<th>assert_info</th>
+														<th>white_list_flag</th>
+											</tr>
+											<tbody id="dataTable">
+												
+											</tbody>
+										</table>
+										<div id="pageID" class="page_div"></div>
+									</div>
+									<!-- 查询结果表格显示区域 end-->
+								</div>
+							</div>
+						</div>
+						<!--后台正文区域结束-->
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 修改模态框 -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="updateModalLabel">修改信息</h4>
+				</div>
+				<div class="modal-body" id="updateModalBody">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="confirmUp()">确认</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 添加模态框 -->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="addModalLabel">添加信息</h4>
+				</div>
+				<div class="modal-body" id="addModalBody">
+					<form>
+								<div class="form-group">
+									<label for="id-insert" class="control-label">id:</label>
+									<input type="number" class="form-control" id="id-insert"/>
+								</div>
+								<div class="form-group">
+									<label for="department_name-insert" class="control-label">department_name:</label>
+									<input type="text" class="form-control" id="department_name-insert"/>
+								</div>
+								<div class="form-group">
+									<label for="test_case_name-insert" class="control-label">test_case_name:</label>
+									<input type="text" class="form-control" id="test_case_name-insert"/>
+								</div>
+								<div class="form-group">
+									<label for="test_result-insert" class="control-label">test_result:</label>
+									<input type="text" class="form-control" id="test_result-insert"/>
+								</div>
+								<div class="form-group">
+									<label for="last_test_result-insert" class="control-label">last_test_result:</label>
+									<input type="text" class="form-control" id="last_test_result-insert"/>
+								</div>
+								<div class="form-group">
+									<label for="last_result_time-insert" class="control-label">last_result_time:</label>
+									<input type="text" id="last_result_time-insert" class="form_datetime"/>
+								</div>
+								<div class="form-group">
+									<label for="assert_info-insert" class="control-label">assert_info:</label>
+									<textarea class="form-control" id="assert_info-insert"></textarea>
+								</div>
+								<div class="form-group">
+									<label for="white_list_flag-insert" class="control-label">white_list_flag:</label>
+									<input type="number" class="form-control" id="white_list_flag-insert"/>
+								</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="confirmAdd()">确认</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 修改内容模板  -->
+	<script id="updateTemplate" type="text/html">
+		<form>
+					<div class="form-group">
+						<label for="department_name-attr" class="control-label">department_name:</label>
+						<input type="text" class="form-control" id="department_name-attr" value="{{department_name}}"/>
+					</div>
+					<div class="form-group">
+						<label for="test_case_name-attr" class="control-label">test_case_name:</label>
+						<input type="text" class="form-control" id="test_case_name-attr" value="{{test_case_name}}"/>
+					</div>
+					<div class="form-group">
+						<label for="test_result-attr" class="control-label">test_result:</label>
+						<input type="text" class="form-control" id="test_result-attr" value="{{test_result}}"/>
+					</div>
+					<div class="form-group">
+						<label for="last_test_result-attr" class="control-label">last_test_result:</label>
+						<input type="text" class="form-control" id="last_test_result-attr" value="{{last_test_result}}"/>
+					</div>
+					<div class="form-group">
+						<label for="last_result_time-attr" class="control-label">last_result_time:</label>
+						<input type="text" class="form_datetime" id="last_result_time-attr" value="{{last_result_time}}"/>
+					</div>
+					<div class="form-group">
+						<label for="assert_info-attr" class="control-label">assert_info:</label>
+						<textarea class="form-control" id="assert_info-attr">{{assert_info}}</textarea>
+					</div>
+					<div class="form-group">
+						<label for="white_list_flag-attr" class="control-label">white_list_flag:</label>
+						<input type="number" class="form-control" id="white_list_flag-attr" value="{{white_list_flag}}"/>
+					</div>
+					<div class="form-group">
+						<input type="hidden" class="form-control" id="id-attr" value="{{id}}"/>
+					</div>
+		</form>
+	</script>
+
+	<!-- 表格内容模板  -->
+	<script id="tableContentTemplate" type="text/html">
+		{{#result}}
+		<tr>
+			<td>
+				<button type="button" class="btn btn-info btn-sm" onclick="upMsg('{{id}}','/test_case/select')">更新</button>&nbsp;
+				<button type="button" class="btn btn-danger btn-sm" onclick="delMsg('{{id}}','/test_case/delete',this)">删除</button>&nbsp;
+			</td>
+			<td>{{id}}</td>
+			<td>{{department_name}}</td>
+			<td>{{test_case_name}}</td>
+			<td>{{test_result}}</td>
+			<td>{{last_test_result}}</td>
+			<td>{{last_result_time}}</td>
+			<td>{{assert_info}}</td>
+			<td>{{white_list_flag}}</td>
+		</tr>
+		{{/result}}
+	</script>
+
+	<script>
+		
+		var basePath = "/alertmonitorsystem";
+		var currentPage = 1;
+		var totalPage;
+		var sqlMap = {};
+		//排序的数据
+		var orderData = [];
+		var controllerPrefix = "test_case";
+
+		$(function() {
+
+			//后面可以根据自身业务具体添加查询条件，目前条件只有当前页
+			
+			//crudFactory.js
+			$crud.getDataByCurrentPage();
+
+		});
+
+
+		function queryInfo() {
+			sqlMap = {};
+			sqlMap.id=$("#id-query").val();
+			sqlMap.department_name=$("#department_name-query").val();
+			sqlMap.test_case_name=$("#test_case_name-query").val();
+			sqlMap.last_result_time=$("#last_result_time-query").val();
+			sqlMap.white_list_flag=$("#white_list_flag-query").val();
+
+			if(sqlMap.id == '' && sqlMap.department_name == '' && sqlMap.test_case_name && sqlMap.last_result_time && sqlMap.white_list_flag){
+				$(function(){
+					$crud.getDataByCurrentPage();
+				});
+			}
+			else{
+				$(function(){
+					$crud.getDataByCondition();
+				});
+			}
+
+		}
+
+		function delMsg(id, path, thisVal) {
+
+			if (confirm("确定删除吗？")) {
+				$z.ajaxStrAndJson({
+					url : basePath + path,
+					data : {
+						id : id
+					},
+					success : function(data) {
+						$(thisVal).parent().parent().remove();
+					}
+				});
+			}
+
+		}
+
+		function upMsg(id, path) {
+
+			$z.ajaxStrAndJson({
+				url : basePath + path,
+				data : {
+					id : id
+				},
+				success : function(data) {
+					// 把数据动态写入模态框
+					var bodyHtmlTemplate = $("#updateTemplate").html();
+					Mustache.parse(bodyHtmlTemplate); // 预编译模板
+					var bodyHtml = Mustache.render(bodyHtmlTemplate, data.result[0]);
+					$('#updateModalBody').html(bodyHtml);
+					
+					makeUpMsg(data.result[0]);
+					
+					$('#updateModal').modal('show');
+					
+				}
+			});
+		}
+
+ 		function confirmUp() {
+			$z.ajaxStrAndJson({
+				url : basePath + "/" + controllerPrefix + "/update",
+				data : {
+					id : $("#id-attr").val(),
+					department_name : $("#department_name-attr").val(),
+					test_case_name : $("#test_case_name-attr").val(),
+					test_result : $("#test_result-attr").val(),
+					last_test_result : $("#last_test_result-attr").val(),
+					last_result_time : $("#last_result_time-attr").val(),
+					assert_info : $("#assert_info-attr").val(),
+					white_list_flag : $("#white_list_flag-attr").val()
+				},
+				success : function(data) {
+					alert("更新成功！");
+					$('#updateModal').modal('hide');
+					$crud.getDataByCurrentPage();
+				}
+			});
+		}
+		
+		
+		function addMsg() {
+			$('#addModal').modal('show');
+		}
+		
+		function confirmAdd() {
+			$z.ajaxStrAndJson({
+				url : basePath + "/" + controllerPrefix + "/add",
+				data : {
+					id : $("#id-insert").val(),
+					department_name : $("#department_name-insert").val(),
+					test_case_name : $("#test_case_name-insert").val(),
+					test_result : $("#test_result-insert").val(),
+					last_test_result : $("#last_test_result-insert").val(),
+					last_result_time : $("#last_result_time-insert").val(),
+					assert_info : $("#assert_info-insert").val(),
+					white_list_flag : $("#white_list_flag-insert").val()
+				},
+				success : function(data) {
+					alert("添加成功！");
+					$('#addModal').modal('hide');
+					//初始化
+					sqlMap = {};
+					currentPage = totalPage;
+					orderData = [];
+					$crud.getDataByCurrentPage();
+				}
+			});
+		}
+		
+		function makeResult(data) {
+			for (var i = 0; i < data.length; i++) {
+			}
+		}
+
+		function makeUpMsg(data) {
+		}
+
+
+		function exportExcel() {
+
+			//显示进度条
+			InitMprogress();
+			window.location.href = basePath + "/" + controllerPrefix
+					+ "/exportExcel";
+			// 进度条消失
+			setTimeout("MprogressEnd()", totalPage / 20 * 1000);
+		}
+
+		$('.form_datetime').datetimepicker({
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        format: 'yyyy-mm-dd hh:ii:ss'
+    });
+
+	</script>
+</body>
+
+</html>

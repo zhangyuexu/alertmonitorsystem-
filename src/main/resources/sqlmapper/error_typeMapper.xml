@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="alertmonitorsystem.dao.IError_typeDao">
+
+	<insert id="add" parameterType="java.util.HashMap">
+		insert into Error_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="id != null">
+					id,
+				</if>
+				<if test="error_type != null">
+					error_type,
+				</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="id != null">
+					#{id},
+				</if>
+				<if test="error_type != null">
+					#{error_type},
+				</if>
+		</trim>
+	</insert>
+
+	<delete id="delete" parameterType="java.util.HashMap">
+		delete from Error_type
+		<where>
+				<if test="id != null">
+					and id=#{id}
+				</if>
+		</where>
+	</delete>
+
+	<update id="update" parameterType="java.util.HashMap">
+		update Error_type
+		<trim prefix="set" suffixOverrides=",">
+				<if test="id != null">
+					id=#{id},
+				</if>
+				<if test="error_type != null">
+					error_type=#{error_type},
+				</if>
+		</trim>
+		<where>
+				<if test="id != null">
+					and id=#{id}
+				</if>
+		</where>
+	</update>
+
+	<select id="select" parameterType="java.util.HashMap"
+		resultType="java.util.LinkedHashMap">
+			select 
+				id,
+				error_type
+			from Error_type
+			
+			<where>
+	
+					<if test="id != null">
+						and id=#{id}
+					</if>
+					<if test="error_type != null">
+						and error_type=#{error_type}
+					</if>
+	
+			</where>
+			<if test="orderStr != '' and orderStr != null">
+				order by ${orderStr}
+			</if>
+			<if test="start != null and pageSize != null">
+				limit #{start},#{pageSize}
+			</if>
+		
+		
+	</select>
+	
+	<select id="likeSelect" parameterType="java.util.HashMap"
+		resultType="java.util.LinkedHashMap">
+			select
+			
+				id,
+				error_type
+			from Error_type
+			
+			<where>
+	
+						<if test="id != null and id != '' ">
+						and id <![CDATA[=]]> #{id}
+						</if>
+	
+			</where>
+			
+			<if test="orderStr != '' and orderStr != null">
+				order by ${orderStr}
+			</if>
+			<if test="start != null and pageSize != null">
+				limit #{start},#{pageSize}
+			</if>
+		
+		
+	</select>
+	
+	<select id="likeSelectCount" parameterType="java.util.HashMap"
+		resultType="java.lang.Long">
+
+		select 
+			count(1)
+		from Error_type
+		
+		<where>
+
+				<if test="id != null and id != '' ">
+				and id <![CDATA[=]]> #{id}
+				</if>
+			
+		</where>
+	</select>
+	
+</mapper>
